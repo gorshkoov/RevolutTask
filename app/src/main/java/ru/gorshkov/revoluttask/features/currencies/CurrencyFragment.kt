@@ -3,6 +3,7 @@ package ru.gorshkov.revoluttask.features.currencies
 import android.os.Bundle
 import android.view.View
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,10 @@ import ru.gorshkov.revoluttask.base.fragment.ViewModelFragment
 import ru.gorshkov.revoluttask.features.currencies.adapter.CurrencyAdapter
 import ru.gorshkov.revoluttask.features.currencies.adapter.CurrencyAmountListener
 import ru.gorshkov.revoluttask.pojo.RevolutCurrency
-import ru.gorshkov.revoluttask.utils.*
+import ru.gorshkov.revoluttask.utils.ViewsUtils
+import ru.gorshkov.revoluttask.utils.injectViewModel
+import ru.gorshkov.revoluttask.utils.setGone
+import ru.gorshkov.revoluttask.utils.setVisible
 import javax.inject.Inject
 
 class CurrencyFragment : ViewModelFragment<CurrencyViewModel>(), CurrencyAmountListener {
@@ -36,7 +40,9 @@ class CurrencyFragment : ViewModelFragment<CurrencyViewModel>(), CurrencyAmountL
                 progress_view.setGone()
             }
         })
-        viewModel.errorLiveData.observe(this, Observer { toast(it) })
+        viewModel.errorLiveData.observe(this, Observer {
+            Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
+        })
         viewModel.onCreated()
     }
 

@@ -18,9 +18,5 @@ abstract class ViewModelFragment<T : ViewModel> : BaseFragment() {
         viewModel = initViewModel()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     abstract fun initViewModel(): T
 }
