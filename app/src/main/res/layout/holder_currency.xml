@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_recycler_item"
+    android:padding="@dimen/padding_16">
+
+    <ImageView
+        android:id="@+id/currency_icon"
+        android:layout_width="@dimen/currency_icon_size"
+        android:layout_height="@dimen/currency_icon_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/ic_eur" />
+
+    <TextView
+        android:id="@+id/currency_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_8"
+        android:fontFamily="@font/open_sans_semibold"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_18"
+        app:layout_constraintBottom_toTopOf="@id/currency_name"
+        app:layout_constraintStart_toEndOf="@id/currency_icon"
+        app:layout_constraintTop_toTopOf="@id/currency_icon"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="EUR" />
+
+    <TextView
+        android:id="@+id/currency_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_8"
+        android:fontFamily="@font/open_sans"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/text_14"
+        app:layout_constraintBottom_toBottomOf="@id/currency_icon"
+        app:layout_constraintStart_toEndOf="@id/currency_icon"
+        app:layout_constraintTop_toBottomOf="@id/currency_text"
+        tools:text="Euro" />
+
+    <EditText
+        android:id="@+id/amount_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/currency_hint"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        android:maxLength="15"
+        android:maxLines="1"
+        android:textSize="@dimen/text_22"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="LabelFor"
+        tools:text="1.00" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
