@@ -2,7 +2,6 @@ package ru.gorshkov.revoluttask.features.currencies
 
 import android.os.Bundle
 import android.view.View
-import android.widget.AbsListView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,8 +15,6 @@ import ru.gorshkov.revoluttask.features.currencies.adapter.CurrencyAmountListene
 import ru.gorshkov.revoluttask.pojo.RevolutCurrency
 import ru.gorshkov.revoluttask.utils.ViewsUtils
 import ru.gorshkov.revoluttask.utils.injectViewModel
-import ru.gorshkov.revoluttask.utils.setGone
-import ru.gorshkov.revoluttask.utils.setVisible
 import javax.inject.Inject
 
 class CurrencyFragment : ViewModelFragment<CurrencyViewModel>(), CurrencyAmountListener {
@@ -34,11 +31,7 @@ class CurrencyFragment : ViewModelFragment<CurrencyViewModel>(), CurrencyAmountL
             (currencies_recycler.adapter as CurrencyAdapter).update(it)
         })
         viewModel.progressLiveData.observe(this, Observer {
-            if (it) {
-                progress_view.setVisible()
-            } else {
-                progress_view.setGone()
-            }
+            progress_view.visibility = if (it) View.VISIBLE else View.GONE
         })
         viewModel.errorLiveData.observe(this, Observer {
             Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
@@ -57,9 +50,10 @@ class CurrencyFragment : ViewModelFragment<CurrencyViewModel>(), CurrencyAmountL
             currencyAdapter.setHasStableIds(true)
             adapter = currencyAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    if (newState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val firstVisiblePosition: Int = layoutManager.findFirstVisibleItemPosition()
+                    if (firstVisiblePosition > 0) {
                         viewsUtils.hideKeyboard(recyclerView)
                     }
                 }

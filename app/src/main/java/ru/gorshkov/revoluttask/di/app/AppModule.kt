@@ -14,7 +14,7 @@ import ru.gorshkov.revoluttask.di.main.MainActivityModule
 import ru.gorshkov.revoluttask.di.scopes.ActivityScope
 import ru.gorshkov.revoluttask.di.viewmodel.ViewModelModule
 
-@Module(includes = [AndroidInjectionModule::class, NetworkModule::class])
+@Module(includes = [AndroidInjectionModule::class, NetworkModule::class, AppProvidesModule::class])
 abstract class AppModule {
     @Binds
     abstract fun bindBaseContext(app: Application): Context
