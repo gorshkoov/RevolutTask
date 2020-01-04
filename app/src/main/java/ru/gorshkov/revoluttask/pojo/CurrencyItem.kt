@@ -2,10 +2,11 @@ package ru.gorshkov.revoluttask.pojo
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import java.math.BigDecimal
 
 data class CurrencyItem(
     val currency: RevolutCurrency,
-    val value: Float,
+    val value: BigDecimal,
     @DrawableRes val icon : Int,
     @StringRes val title : Int) {
 

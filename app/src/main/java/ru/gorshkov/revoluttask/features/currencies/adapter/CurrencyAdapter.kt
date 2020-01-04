@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.holder_currency.view.*
 import ru.gorshkov.revoluttask.R
 import ru.gorshkov.revoluttask.pojo.CurrencyItem
-import ru.gorshkov.revoluttask.pojo.RevolutCurrency
 
 class CurrencyAdapter(private val amountListener: CurrencyAmountListener) :
     RecyclerView.Adapter<CurrencyHolder>() {
@@ -23,7 +22,7 @@ class CurrencyAdapter(private val amountListener: CurrencyAmountListener) :
         holder.itemView.setOnClickListener {
             val editTextView = it.amount_edit_text
             val item = editTextView.getTag(R.id.tag_currency) as CurrencyItem
-            val text = (editTextView as EditText).text.toString().toFloat()
+            val text = (editTextView as EditText).text.toString()
             updateCurrency(item, text)
             editTextView.requestFocus()
         }
@@ -35,15 +34,15 @@ class CurrencyAdapter(private val amountListener: CurrencyAmountListener) :
                 }
 
                 val item = editTextView.getTag(R.id.tag_currency) as CurrencyItem
-                val text = (editTextView as EditText).text.toString().toFloat()
+                val text = (editTextView as EditText).text.toString()
                 updateCurrency(item, text)
             }
 
         holder.itemView.amount_edit_text.addTextChangedListener {
-            if(!holder.itemView.amount_edit_text.hasFocus()) {
+            if (!holder.itemView.amount_edit_text.hasFocus()) {
                 return@addTextChangedListener
             }
-            val amount = it.toString().toFloatOrNull()
+            val amount = it.toString()
             amountListener.onAmountChanged(amount)
         }
 
@@ -69,7 +68,7 @@ class CurrencyAdapter(private val amountListener: CurrencyAmountListener) :
         holder.bind(items[position])
     }
 
-    private fun updateCurrency(item: CurrencyItem, amount : Float) {
+    private fun updateCurrency(item: CurrencyItem, amount: String) {
         val position = items.indexOf(item)
         if (position <= 0) {
             return

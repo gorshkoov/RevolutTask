@@ -71,11 +71,11 @@ class CurrencyFragment : ViewModelFragment<CurrencyViewModel>(), CurrencyAmountL
         viewModel.onPaused()
     }
 
-    override fun onCurrencyChanged(currency: RevolutCurrency, amount: Float) {
+    override fun onCurrencyChanged(currency: RevolutCurrency, amount: String) {
         viewModel.onCurrencyChanged(currency, amount)
     }
 
-    override fun onAmountChanged(amount: Float?) {
+    override fun onAmountChanged(amount: String?) {
         viewModel.onAmountChanged(amount)
     }
 }

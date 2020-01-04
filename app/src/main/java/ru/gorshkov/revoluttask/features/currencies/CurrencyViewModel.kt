@@ -71,7 +71,7 @@ class CurrencyViewModel @Inject constructor(
         progressLiveData.postValue(false)
     }
 
-    fun onCurrencyChanged(currency: RevolutCurrency, amount: Float) {
+    fun onCurrencyChanged(currency: RevolutCurrency, amount: String) {
         isListInMove = true
         this.currentBaseCurrency = currency
         currencyInteractor.updateAmount(amount)
@@ -79,7 +79,7 @@ class CurrencyViewModel @Inject constructor(
         reloadWithDelay(DEFAULT_DELAY)
     }
 
-    fun onAmountChanged(amount: Float?) {
+    fun onAmountChanged(amount: String?) {
         currencyInteractor.updateAmount(amount)
     }
 }

@@ -4,7 +4,7 @@ import ru.gorshkov.revoluttask.pojo.RevolutCurrency
 
 
 interface CurrencyAmountListener {
-    fun onCurrencyChanged(currency: RevolutCurrency, amount: Float)
+    fun onCurrencyChanged(currency: RevolutCurrency, amount: String)
 
-    fun onAmountChanged(amount: Float?)
+    fun onAmountChanged(amount: String?)
 }
