@@ -48,6 +48,8 @@ class CurrencyInteractor @Inject constructor(
         else {
             BigDecimal(strValue.replace(',', '.'))
         }
+
+        currencyRepository.updateAmount(strValue)
     }
 
     private fun getAmount(): BigDecimal {

@@ -15,11 +15,15 @@ class CurrencyAdapter(private val amountListener: CurrencyAmountListener) :
     RecyclerView.Adapter<CurrencyHolder>() {
 
     private var items = ArrayList<CurrencyItem>()
+    private var isOffline = false
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, layoutId: Int): CurrencyHolder {
         val view = LayoutInflater.from(viewGroup.context).inflate(layoutId, viewGroup, false)
         val holder = CurrencyHolder(view)
         holder.itemView.setOnClickListener {
+            if (isOffline) {
+                return@setOnClickListener
+            }
             val editTextView = it.amount_edit_text
             val item = editTextView.getTag(R.id.tag_currency) as CurrencyItem
             val text = (editTextView as EditText).text.toString()
@@ -29,6 +33,9 @@ class CurrencyAdapter(private val amountListener: CurrencyAmountListener) :
 
         holder.itemView.amount_edit_text.onFocusChangeListener =
             View.OnFocusChangeListener { editTextView, hasFocus ->
+                if (isOffline) {
+                    return@OnFocusChangeListener
+                }
                 if (!hasFocus) {
                     return@OnFocusChangeListener
                 }
@@ -64,7 +71,7 @@ class CurrencyAdapter(private val amountListener: CurrencyAmountListener) :
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: CurrencyHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(items[position], isOffline, position)
     }
 
     private fun updateCurrency(item: CurrencyItem, amount: String) {
@@ -76,5 +83,10 @@ class CurrencyAdapter(private val amountListener: CurrencyAmountListener) :
         items.add(0, item)
         notifyItemMoved(position, 0)
         amountListener.onCurrencyChanged(item.currency, amount)
+    }
+
+    fun setNetworkMode(isOffline: Boolean) {
+        this.isOffline = isOffline
+        notifyDataSetChanged()
     }
 }

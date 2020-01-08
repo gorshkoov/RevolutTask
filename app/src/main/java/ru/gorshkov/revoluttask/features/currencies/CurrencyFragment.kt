@@ -33,8 +33,12 @@ class CurrencyFragment : ViewModelFragment<CurrencyViewModel>(), CurrencyAmountL
         viewModel.progressLiveData.observe(this, Observer {
             progress_view.visibility = if (it) View.VISIBLE else View.GONE
         })
-        viewModel.errorLiveData.observe(this, Observer {
-            Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
+        viewModel.offlineChangedLiveData.observe(this, Observer {
+            network_status_image.visibility = if (it) View.VISIBLE else View.GONE
+            (currencies_recycler.adapter as CurrencyAdapter).setNetworkMode(it)
+            if (it) {
+                Toast.makeText(activity, R.string.offline_mode_message, Toast.LENGTH_LONG).show()
+            }
         })
         viewModel.onCreated()
     }

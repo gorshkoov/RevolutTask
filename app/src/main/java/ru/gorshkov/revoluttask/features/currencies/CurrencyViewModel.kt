@@ -8,38 +8,40 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.gorshkov.revoluttask.R
 import ru.gorshkov.revoluttask.base.coroutines.CoroutinesDispatcher
 import ru.gorshkov.revoluttask.features.currencies.interactors.CurrencyInteractor
 import ru.gorshkov.revoluttask.pojo.CurrencyItem
 import ru.gorshkov.revoluttask.pojo.RevolutCurrency
+import ru.gorshkov.revoluttask.utils.ConnectionUtils
 import javax.inject.Inject
 
 class CurrencyViewModel @Inject constructor(
     private val currencyInteractor: CurrencyInteractor,
-    private val dispatchers: CoroutinesDispatcher
+    private val dispatchers: CoroutinesDispatcher,
+    private val connectionUtils: ConnectionUtils
 ) : ViewModel() {
 
-    companion object{
+    companion object {
         const val DEFAULT_DELAY = 1000L
     }
 
-    val errorLiveData = MutableLiveData<Int>()
     val progressLiveData = MutableLiveData<Boolean>()
     val currenciesLiveData = MutableLiveData<MutableList<CurrencyItem>>()
+    val offlineChangedLiveData = MutableLiveData<Boolean>()
 
-    private lateinit var job : Job
+    private lateinit var job: Job
 
     private var isListInMove = false
     private var isPaused = false
 
     private val handler = CoroutineExceptionHandler { _, exception ->
         Timber.e { "CurrenciesViewModel:: $exception" }
-        errorLiveData.postValue(R.string.default_error)
         progressLiveData.postValue(false)
     }
 
     fun onCreated() {
+        connectionUtils.subscribeToConnectionChanges { offlineChangedLiveData.postValue(it) }
+        offlineChangedLiveData.postValue(!connectionUtils.isInternetAvailable())
         progressLiveData.postValue(true)
     }
 

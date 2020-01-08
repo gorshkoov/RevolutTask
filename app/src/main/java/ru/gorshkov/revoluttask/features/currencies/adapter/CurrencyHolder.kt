@@ -11,11 +11,16 @@ import java.util.*
 
 class CurrencyHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 
-    fun bind(item: CurrencyItem) {
+    fun bind(item: CurrencyItem, isOffline: Boolean, position: Int) {
         view.currency_icon.setImageResource(item.icon)
         view.currency_text.text = item.currency.name
         view.currency_name.setText(item.title)
         view.amount_edit_text.setTag(R.id.tag_currency, item)
+        if (isOffline) {
+            view.amount_edit_text.isEnabled = position == 0
+        } else {
+            view.amount_edit_text.isEnabled = true
+        }
         if (!view.amount_edit_text.isFocused) {
             if (item.value.compareTo(BigDecimal.ZERO) == 0) {
                 view.amount_edit_text.setText("")

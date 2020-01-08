@@ -4,11 +4,13 @@ import ru.gorshkov.revoluttask.db.CurrencyEntityDao
 import ru.gorshkov.revoluttask.db.entities.CurrencyEntity
 import ru.gorshkov.revoluttask.network.CurrencyService
 import ru.gorshkov.revoluttask.pojo.RevolutCurrency
+import ru.gorshkov.revoluttask.utils.ConnectionUtils
 import java.math.BigDecimal
 import javax.inject.Inject
 
 class CurrencyRepositoryImpl @Inject constructor(
     private val service: CurrencyService,
+    private val connectionUtils: ConnectionUtils,
     private val currencyEntityDao: CurrencyEntityDao
 ) : CurrencyRepository {
 
@@ -20,6 +22,9 @@ class CurrencyRepositoryImpl @Inject constructor(
     override suspend fun loadCurrencies(): MutableList<CurrencyEntity> {
         if (currentBase == null) {
             currentBase = getBaseCurrency()
+        }
+        if (!connectionUtils.isInternetAvailable()) {
+            return currencyEntities
         }
         val rate = service.getCurrencyRate(currentBase!!.name)
 
