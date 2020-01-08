@@ -56,9 +56,8 @@ class CurrencyAdapter(private val amountListener: CurrencyAmountListener) :
     }
 
     fun update(newItems: MutableList<CurrencyItem>) {
-        val sorted = ArrayList(newItems.sortedBy { this.items.indexOf(it) })
-        val diffResult = DiffUtil.calculateDiff(CurrencyItemCallback(this.items, sorted))
-        this.items = ArrayList(sorted)
+        val diffResult = DiffUtil.calculateDiff(CurrencyItemCallback(this.items, newItems))
+        this.items = ArrayList(newItems)
         diffResult.dispatchUpdatesTo(this)
     }
 

@@ -8,7 +8,8 @@ data class CurrencyItem(
     val currency: RevolutCurrency,
     val value: BigDecimal,
     @DrawableRes val icon : Int,
-    @StringRes val title : Int) {
+    @StringRes val title : Int
+) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

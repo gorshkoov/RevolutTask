@@ -1,6 +1,5 @@
 package ru.gorshkov.revoluttask.features.currencies.interactors
 
-import com.github.ajalt.timberkt.Timber
 import ru.gorshkov.revoluttask.features.currencies.repositories.CurrencyRepository
 import ru.gorshkov.revoluttask.pojo.CurrencyItem
 import ru.gorshkov.revoluttask.pojo.RevolutCurrency
@@ -15,22 +14,19 @@ class CurrencyInteractor @Inject constructor(
 
     private var amount: BigDecimal? = BigDecimal.ONE
 
-    suspend fun getCurrencies(base: RevolutCurrency): MutableList<CurrencyItem> {
-        val rate = currencyRepository.getCurrencyRate(base.name)
+    suspend fun getCurrencies(): MutableList<CurrencyItem> {
+        val currencyEntities = currencyRepository.loadCurrencies()
         val list = ArrayList<CurrencyItem>()
-        Timber.d { "Amount::getCurrencies(): $amount" }
-        list.add(
-            CurrencyItem(
-                base, getAmount(), currencyUtils.getIcon(base),
-                currencyUtils.getName(base)
-            )
-        )
 
-        for ((currency, amount) in rate.rates) {
+        for (index in currencyEntities.indices) {
+            val entity = currencyEntities[index]
+            val amount = if (index == 0) getAmount() else getMultiplied(entity.value)
             list.add(
                 CurrencyItem(
-                    currency, getMultiplied(amount), currencyUtils.getIcon(currency),
-                    currencyUtils.getName(currency)
+                    entity.currency,
+                    amount,
+                    currencyUtils.getIcon(entity.currency),
+                    currencyUtils.getName(entity.currency)
                 )
             )
         }
@@ -40,6 +36,10 @@ class CurrencyInteractor @Inject constructor(
 
     private fun getMultiplied(strValue: String): BigDecimal {
         return BigDecimal(strValue).multiply(amount)
+    }
+
+    fun updateCurrency(currency: RevolutCurrency) {
+        currencyRepository.updateCurrency(currency)
     }
 
     fun updateAmount(strValue: String?) {

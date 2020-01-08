@@ -4,7 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.ajalt.timberkt.Timber
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.gorshkov.revoluttask.R
 import ru.gorshkov.revoluttask.base.coroutines.CoroutinesDispatcher
 import ru.gorshkov.revoluttask.features.currencies.interactors.CurrencyInteractor
@@ -28,7 +31,6 @@ class CurrencyViewModel @Inject constructor(
     private lateinit var job : Job
 
     private var isListInMove = false
-    private var currentBaseCurrency = RevolutCurrency.EUR
     private var isPaused = false
 
     private val handler = CoroutineExceptionHandler { _, exception ->
@@ -63,7 +65,7 @@ class CurrencyViewModel @Inject constructor(
     }
 
     private suspend fun getCurrencies() {
-        val currencies = currencyInteractor.getCurrencies(currentBaseCurrency)
+        val currencies = currencyInteractor.getCurrencies()
         if (isListInMove) {
             return
         }
@@ -73,7 +75,7 @@ class CurrencyViewModel @Inject constructor(
 
     fun onCurrencyChanged(currency: RevolutCurrency, amount: String) {
         isListInMove = true
-        this.currentBaseCurrency = currency
+        currencyInteractor.updateCurrency(currency)
         currencyInteractor.updateAmount(amount)
         job.cancel()
         reloadWithDelay(DEFAULT_DELAY)
