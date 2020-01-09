@@ -6,7 +6,5 @@ import ru.gorshkov.revoluttask.pojo.RevolutCurrency
 interface CurrencyRepository {
     suspend fun loadCurrencies(): MutableList<CurrencyEntity>
 
-    fun updateAmount(strValue: String?)
-
     fun updateCurrency(currency: RevolutCurrency)
 }

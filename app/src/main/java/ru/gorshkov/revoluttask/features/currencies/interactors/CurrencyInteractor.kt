@@ -1,5 +1,6 @@
 package ru.gorshkov.revoluttask.features.currencies.interactors
 
+import ru.gorshkov.revoluttask.features.currencies.repositories.AmountRepository
 import ru.gorshkov.revoluttask.features.currencies.repositories.CurrencyRepository
 import ru.gorshkov.revoluttask.pojo.CurrencyItem
 import ru.gorshkov.revoluttask.pojo.RevolutCurrency
@@ -9,12 +10,16 @@ import javax.inject.Inject
 
 class CurrencyInteractor @Inject constructor(
     private val currencyRepository: CurrencyRepository,
+    private val amountRepository: AmountRepository,
     private val currencyUtils: CurrencyUtils
 ) {
 
-    private var amount: BigDecimal? = BigDecimal.ONE
+    private var amount: BigDecimal? = null
 
     suspend fun getCurrencies(): MutableList<CurrencyItem> {
+        if(amount == null) {
+            amount = amountRepository.getSavedAmount() ?: BigDecimal.ONE
+        }
         val currencyEntities = currencyRepository.loadCurrencies()
         val list = ArrayList<CurrencyItem>()
 
@@ -48,8 +53,10 @@ class CurrencyInteractor @Inject constructor(
         else {
             BigDecimal(strValue.replace(',', '.'))
         }
+    }
 
-        currencyRepository.updateAmount(strValue)
+    suspend fun storeAmountValue() {
+        amountRepository.saveAmount(amount!!)
     }
 
     private fun getAmount(): BigDecimal {

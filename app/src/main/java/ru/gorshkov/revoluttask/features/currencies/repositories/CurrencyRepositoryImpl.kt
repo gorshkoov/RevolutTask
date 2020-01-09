@@ -1,11 +1,10 @@
 package ru.gorshkov.revoluttask.features.currencies.repositories
 
-import ru.gorshkov.revoluttask.db.CurrencyEntityDao
+import ru.gorshkov.revoluttask.db.dao.CurrencyEntityDao
 import ru.gorshkov.revoluttask.db.entities.CurrencyEntity
 import ru.gorshkov.revoluttask.network.CurrencyService
 import ru.gorshkov.revoluttask.pojo.RevolutCurrency
 import ru.gorshkov.revoluttask.utils.ConnectionUtils
-import java.math.BigDecimal
 import javax.inject.Inject
 
 class CurrencyRepositoryImpl @Inject constructor(
@@ -14,9 +13,7 @@ class CurrencyRepositoryImpl @Inject constructor(
     private val currencyEntityDao: CurrencyEntityDao
 ) : CurrencyRepository {
 
-    private var amount: BigDecimal? = BigDecimal.ONE
     private var currentBase: RevolutCurrency? = null
-
     private val currencyEntities: MutableList<CurrencyEntity> by lazy { getEntitiesDb() }
 
     override suspend fun loadCurrencies(): MutableList<CurrencyEntity> {
@@ -42,14 +39,6 @@ class CurrencyRepositoryImpl @Inject constructor(
         saveToDb(currencyEntities)
 
         return currencyEntities
-    }
-
-    override fun updateAmount(strValue: String?) {
-        this.amount = if (strValue.isNullOrEmpty())
-            BigDecimal.ZERO
-        else {
-            BigDecimal(strValue.replace(',', '.'))
-        }
     }
 
     override fun updateCurrency(currency: RevolutCurrency) {

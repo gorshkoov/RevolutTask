@@ -1,4 +1,4 @@
-package ru.gorshkov.revoluttask.db
+package ru.gorshkov.revoluttask.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -78,12 +78,17 @@ class CurrencyViewModel @Inject constructor(
     fun onCurrencyChanged(currency: RevolutCurrency, amount: String) {
         isListInMove = true
         currencyInteractor.updateCurrency(currency)
-        currencyInteractor.updateAmount(amount)
+        updateAmount(amount)
         job.cancel()
         reloadWithDelay(DEFAULT_DELAY)
     }
 
     fun onAmountChanged(amount: String?) {
+        updateAmount(amount)
+    }
+
+    private fun updateAmount(amount: String?) {
         currencyInteractor.updateAmount(amount)
+        viewModelScope.launch(dispatchers.IO) { currencyInteractor.storeAmountValue() }
     }
 }
