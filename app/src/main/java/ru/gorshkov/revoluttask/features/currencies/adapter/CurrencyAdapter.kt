@@ -29,6 +29,7 @@ class CurrencyAdapter(private val amountListener: CurrencyAmountListener) :
             val text = (editTextView as EditText).text.toString()
             updateCurrency(item, text)
             editTextView.requestFocus()
+            editTextView.setSelection(text.length)
         }
 
         holder.itemView.amount_edit_text.onFocusChangeListener =
@@ -43,6 +44,7 @@ class CurrencyAdapter(private val amountListener: CurrencyAmountListener) :
                 val item = editTextView.getTag(R.id.tag_currency) as CurrencyItem
                 val text = (editTextView as EditText).text.toString()
                 updateCurrency(item, text)
+                editTextView.post { editTextView.setSelection(text.length) }
             }
 
         holder.itemView.amount_edit_text.addTextChangedListener {
