@@ -13,6 +13,8 @@ import ru.gorshkov.revoluttask.features.currencies.interactors.CurrencyInteracto
 import ru.gorshkov.revoluttask.pojo.CurrencyItem
 import ru.gorshkov.revoluttask.pojo.RevolutCurrency
 import ru.gorshkov.revoluttask.utils.ConnectionUtils
+import java.net.ConnectException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class CurrencyViewModel @Inject constructor(
@@ -35,8 +37,12 @@ class CurrencyViewModel @Inject constructor(
     private var isPaused = false
 
     private val handler = CoroutineExceptionHandler { _, exception ->
-        Timber.e { "CurrenciesViewModel:: $exception" }
+        Timber.e(exception) { "CurrencyViewModel::handler" }
         progressLiveData.postValue(false)
+        //reload currencies without internet
+        if (exception is ConnectException || exception is UnknownHostException) {
+            reloadWithDelay()
+        }
     }
 
     fun onCreated() {
